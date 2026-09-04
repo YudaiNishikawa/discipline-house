@@ -1,32 +1,146 @@
-# React + TypeScript + Vite
+# Discipline House 開発ドキュメント (Docker対応版)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Sky株式会社 インターンシップ事前学習プロジェクト  
+**アプリ名:** Discipline House（ディシプリン・ハウス）  
+**コンセプト:** 習慣達成によって「資産」を蓄積し、自身の価値を高めながら部屋（背景）をレベルアップさせていくモチベーション管理アプリ  
+**デザインテーマ:** あつ森風（ナチュラル・温かみのあるパステル＆木目調・まるみのある親しみやすいUI）
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 1. プロジェクト概要 & 技術スタック
 
-## React Compiler
+### 1.1 技術スタック
+- **言語:** TypeScript (静的型定義による安全なコード設計)
+- **ライブラリ:** React (コンポーネント指向UI設計)
+- **ビルドツール:** Vite (爆速な開発サーバー & HMR)
+- **CSSライブラリ:** Tailwind CSS (直感的かつ高速なコンポーネントスタイリング)
+- **コンテナ環境:** Docker / Docker Compose (開発環境の完全な標準化・インフラ理解)
+- **Linter:** Oxlint (Rust製の超高速コード解析ツール)
+- **デザイン:** あつ森風ナチュラルデザイン (クリーム・アイボリー・パステルグリーン・ウッド)
+- **外部API:** Pixela API (数値データの永続化・ログ蓄積)
+- **バージョン管理:** Git / GitHub (Feature Branch Workflow による開発)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## 2. レベルデザイン（資産・レベル計算仕様）
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+習慣を継続するほど次のレベルに到達する難易度が上がり、成果の価値が高まる計算モデル（多項式モデル）を採用します。
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### 2.1 計算式
+レベル $L$ に到達するために必要な累計資産ポイント $A(L)$ は、以下の通り定義します：
+
+$$A(L) = 100 \times L^2$$
+
+- **習慣達成あたりの獲得資産:** ＋100 pt
+- **進捗率（%）計算:** 
+  $$\text{Progress} = \left( \frac{A_{\text{current}} - A(L)}{A(L+1) - A(L)} \right) \times 100$$
+
+### 2.2 レベル推移 & 部屋アセットテーブル
+
+| レベル | 部屋ビジュアルテーマ（あつ森風） | 必要累計pt ($A(L)$) | 該当レベル範囲 (pt) | Lv内の必要達成回数 | 累計達成回数 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Lv.1** | はじまりの広場（小さな木箱と芽） | 0 pt | 0 〜 399 pt | 4回 | 4回 |
+| **Lv.2** | 素朴なテント・木製ベッド | 400 pt | 400 〜 899 pt | 5回 | 9回 |
+| **Lv.3** | 温かみのある木造ログハウス | 900 pt | 900 〜 1,599 pt | 7回 | 16回 |
+| **Lv.4** | 充実したインテリア（観葉植物・ランプ・書斎デスク） | 1,600 pt | 1,600 〜 2,499 pt | 9回 | 25回 |
+| **Lv.5** | 王者のリビング（暖炉とハイエンドインテリア） | 2,500 pt | 2,500 pt 〜 | - | - |
+
+---
+
+## 3. UI/UX 構成方針（あつ森風ナチュラル）
+
+### 3.1 画面レイアウト（ダッシュボード型1画面構成）
+1. **ヘッダー（ステータスエリア）**
+   - パステル調のカード枠。アプリ名、総資産額（$12,500等）、レベルバッジ、丸みのあるプログレスバーを表示。
+2. **メインビジュアル（動的部屋エリア）**
+   - レベルに応じたあつ森風のイラスト・アセットを大きく配置。レベルアップ時に視覚的な変化を提供。
+3. **習慣リスト（デイリーアクションカード）**
+   - アイボリー背景に丸みのある(`rounded-2xl`以上)やわらかいカード。「早起き」「筋トレ」「勉強」等の習慣を表示。
+   - ぽんと浮き出る立体的な達成ボタン（未達成: パステルブルー「Done!」 / 達成済: パステルグリーン「Completed」）。
+4. **ヒートマップログ（フッター）**
+   - Pixela APIから取得したログを緑系の優しいカラーパレットで表示。
+
+---
+
+## 4. 機能要件 & Gitブランチマップ
+
+| 機能カテゴリ | 詳細仕様 | 作業ブランチ名 | 優先度 |
+| :--- | :--- | :--- | :--- |
+| **コンテナ・デザイン基盤** | Docker/Docker Compose設定・Tailwind CSS導入 | `feature/docker-tailwind-setup` | Must |
+| **習慣管理・登録** | 習慣の選択・追加およびステート保持 | `feature/habit-management` | Must |
+| **Pixela API連携** | 達成データの送信（`POST`）と過去ログの取得（`GET`） | `feature/pixela-integration` | Must |
+| **資産・レベルロジック** | 累計ptからのレベル計算、現在レベルおよび次レベルまでの進捗率（%）算出 | `feature/asset-level-calc` | Must |
+| **UI・動的背景** | あつ森風動的部屋ビジュアル・ステータスバーの描画 | `feature/level-background-ui` | Must |
+| **UX演出** | 達成時の紙吹雪・数値カウントアップアニメーション | `feature/completion-effects` | Want |
+
+---
+
+## 5. ディレクトリ構造・アーキテクチャ
+
+拡張性と保守性を高めるため、見た目（UI）とロジック（計算・API）を分離し、ルートにDocker関連設定を設置します。
+
+```text
+discipline-house/
+├── Dockerfile               # Dockerコンテナビルド定義
+├── docker-compose.yml       # 開発用マルチコンテナオーケストレーション
+├── .dockerignore            # node_modules等をイメージ構築から除外
+├── src/
+│   ├── assets/              # 画像、イラスト、効果音等
+│   ├── components/          # UIコンポーネント群
+│   │   ├── common/          # 丸みボタン、モーダル等の共通UI
+│   │   ├── dashboard/       # ヘッダー、ステータス、レベルバー
+│   │   ├── room/            # あつ森風動的部屋ビジュアル
+│   │   ├── habit/           # 習慣リスト、習慣カード
+│   │   └── pixela/          # Pixela草グラフ表示
+│   ├── constants/           # レベル定義・あつ森風カラー設定
+│   │   └── levelConfig.ts
+│   ├── hooks/               # カスタムフック
+│   │   ├── useHabit.ts
+│   │   └── useAsset.ts
+│   ├── services/            # API通信
+│   │   └── pixelaApi.ts
+│   ├── types/               # TypeScript型定義
+│   │   └── index.ts
+│   ├── utils/               # 計算ロジック
+│   │   └── levelCalculator.ts
+│   ├── App.tsx              # メインレイアウト
+│   └── main.tsx
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## 6. Git運用ルール & 開発規約
+
+### 6.1 ブランチ運用
+1. `main` ブランチ: 常に動作するコードのみを保持（直接コミット禁止）。
+2. `feature/*` ブランチ: 機能ごとに `main` から切り出して作業。
+3. 機能完成後、PRを作成し、セルフレビューの上 `main` へマージ。
+
+### 6.2 コミットメッセージ規約
+- `feat:` 新機能の追加
+- `fix:` バグ修正
+- `style:` デザイン・スタイルの変更
+- `docs:` ドキュメントの更新
+- `refactor:` リファクタリング
+- `chore:` Dockerやビルド設定等の周辺環境変更
+
+---
+
+## 7. 開発ロードマップ（3日間スケジュール）
+
+### Phase 1: 設計 & 環境・コンテナ基盤構築（Day 1）
+- [x] 要件定義 ＆ レベルデザイン策定
+- [x] Vite + React + TS + Oxlint プロジェクト立ち上げ
+- [x] Git初期化 & GitHubリポジトリ連携
+- [x] Docker (Dockerfile / docker-compose.yml) 構築 ＆ Tailwind CSS 設定 (`feature/docker-tailwind-setup`)
+
+### Phase 2: コア機能実装（Day 2）
+- [ ] `feature/habit-management`: TypeScript型定義 ＆ 習慣カードUI実装
+- [ ] `feature/asset-level-calc`: 資産・レベル計算ロジックの実装
+- [ ] `feature/level-background-ui`: あつ森風動的部屋ビジュアルの実装
+- [ ] `feature/pixela-integration`: Pixela API連携モジュールの実装
+
+### Phase 3: UX強化 & 仕上げ（Day 3）
+- [ ] `feature/completion-effects`: 達成時エフェクトの組み込み
+- [ ] レスポンシブ調整 & 全体ブラッシュアップ
+- [ ] ドキュメント（`README.md`）の整備 ＆ GitHubへ最終プッシュ
