@@ -10,5 +10,6 @@ export interface HabitState {
   habits: Habit[];
   toggleHabit: (id: string) => void;
   addHabit: (name: string, description?: string) => void;
+  deleteHabit: (id: string) => void;
   resetDaily: () => void;
 }

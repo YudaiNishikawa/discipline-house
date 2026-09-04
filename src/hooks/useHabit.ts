@@ -31,11 +31,15 @@ export function useHabit(): HabitState {
     setHabits((prev) => [...prev, newHabit]);
   }, []);
 
+  const deleteHabit = useCallback((id: string) => {
+    setHabits((prev) => prev.filter((habit) => habit.id !== id));
+  }, []);
+
   const resetDaily = useCallback(() => {
     setHabits((prev) =>
       prev.map((habit) => ({ ...habit, completed: false, completedAt: undefined }))
     );
   }, []);
 
-  return { habits, toggleHabit, addHabit, resetDaily };
+  return { habits, toggleHabit, addHabit, deleteHabit, resetDaily };
 }

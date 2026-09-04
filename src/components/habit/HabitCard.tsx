@@ -3,9 +3,10 @@ import type { Habit } from '../../types';
 interface HabitCardProps {
   habit: Habit;
   onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-export function HabitCard({ habit, onToggle }: HabitCardProps) {
+export function HabitCard({ habit, onToggle, onDelete }: HabitCardProps) {
   return (
     <div
       className={`rounded-2xl p-4 shadow-md transition-all duration-200 ${
@@ -16,7 +17,17 @@ export function HabitCard({ habit, onToggle }: HabitCardProps) {
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-[var(--text-h)]">{habit.name}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-medium text-[var(--text-h)]">{habit.name}</h3>
+            <button
+              type="button"
+              onClick={() => onDelete(habit.id)}
+              className="rounded-full px-2 py-1 text-xs text-[var(--text)] hover:text-red-500 transition-colors"
+              style={{ backgroundColor: 'transparent' }}
+            >
+              ✕
+            </button>
+          </div>
           <button
             type="button"
             onClick={() => onToggle(habit.id)}
@@ -26,7 +37,7 @@ export function HabitCard({ habit, onToggle }: HabitCardProps) {
                 : 'bg-pastel-blue text-white hover:opacity-90'
             }`}
             style={{
-              backgroundColor: habit.completed ? '#a7f3d0' : '#93c5fd',
+              backgroundColor: habit.completed ? '#a7f3d0' : '#3b82f6',
             }}
           >
             {habit.completed ? 'Completed' : 'Done!'}
