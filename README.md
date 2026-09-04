@@ -132,7 +132,7 @@ discipline-house/
 - [x] 要件定義 ＆ レベルデザイン策定
 - [x] Vite + React + TS + Oxlint プロジェクト立ち上げ
 - [x] Git初期化 & GitHubリポジトリ連携
-- [ ] Docker (Dockerfile / docker-compose.yml) 構築 ＆ Tailwind CSS 設定 (`feature/docker-tailwind-setup`)
+- [x] Docker (Dockerfile / docker-compose.yml) 構築 ＆ Tailwind CSS 設定 (`feature/docker-tailwind-setup`)
 
 ### Phase 2: コア機能実装（Day 2）
 - [ ] `feature/habit-management`: TypeScript型定義 ＆ 習慣カードUI実装
