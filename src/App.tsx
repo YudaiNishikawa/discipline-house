@@ -1,20 +1,24 @@
 import { HabitList } from './components/habit/HabitList';
 import { AddHabitForm } from './components/habit/AddHabitForm';
+import { Dashboard } from './components/dashboard/Dashboard';
 import { useHabit } from './hooks/useHabit';
+import { useAsset } from './hooks/useAsset';
 
 function App() {
   const { habits, toggleHabit, addHabit, deleteHabit } = useHabit();
+  const completedCount = habits.filter((h) => h.completed).length;
+  const { totalPoints, levelInfo, progress, formatPoints } = useAsset(completedCount);
 
   return (
     <div className="min-h-screen bg-[var(--bg)] p-6">
-      <header className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-[var(--text-h)] mb-2">
-          Discipline House
-        </h1>
-        <p className="text-[var(--text)]">習慣を達成して資産を蓄積しよう</p>
-      </header>
-
       <main className="max-w-md mx-auto">
+        <Dashboard
+          totalPoints={totalPoints}
+          levelInfo={levelInfo}
+          progress={progress}
+          formatPoints={formatPoints}
+        />
+
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-[var(--text-h)] mb-4">
             今日の習慣
@@ -30,7 +34,7 @@ function App() {
         </section>
 
         <section className="text-center text-sm text-[var(--text)]">
-          {habits.filter((h) => h.completed).length} / {habits.length} 達成
+          {completedCount} / {habits.length} 達成
         </section>
       </main>
     </div>

@@ -135,7 +135,7 @@ discipline-house/
 - [x] Docker (Dockerfile / docker-compose.yml) 構築 ＆ Tailwind CSS 設定 (`feature/docker-tailwind-setup`)
 
 ### Phase 2: コア機能実装（Day 2）
-- [ ] `feature/habit-management`: TypeScript型定義 ＆ 習慣カードUI実装
+- [x] `feature/habit-management`: TypeScript型定義 ＆ 習慣カードUI実装
 - [ ] `feature/asset-level-calc`: 資産・レベル計算ロジックの実装
 - [ ] `feature/level-background-ui`: あつ森風動的部屋ビジュアルの実装
 - [ ] `feature/pixela-integration`: Pixela API連携モジュールの実装
