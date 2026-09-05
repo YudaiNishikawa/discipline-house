@@ -12,4 +12,5 @@ export interface HabitState {
   addHabit: (name: string, description?: string) => void;
   deleteHabit: (id: string) => void;
   resetDaily: () => void;
+  setCompletedCount: (count: number) => void;
 }

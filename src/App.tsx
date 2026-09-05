@@ -1,13 +1,34 @@
+import { useCallback, useEffect } from 'react';
 import { HabitList } from './components/habit/HabitList';
 import { AddHabitForm } from './components/habit/AddHabitForm';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { useHabit } from './hooks/useHabit';
+import { useStorage } from './hooks/useStorage';
 import { useAsset } from './hooks/useAsset';
 
 function App() {
-  const { habits, toggleHabit, addHabit, deleteHabit } = useHabit();
+  const { habits, toggleHabit, addHabit, deleteHabit, setCompletedCount } = useHabit();
+  const { totalPoints, addPoints } = useStorage();
+
   const completedCount = habits.filter((h) => h.completed).length;
-  const { totalPoints, levelInfo, progress, formatPoints } = useAsset(completedCount);
+  const { levelInfo, progress, formatPoints } = useAsset(totalPoints);
+
+  useEffect(() => {
+    setCompletedCount(Math.floor(totalPoints / 100));
+  }, [totalPoints, setCompletedCount]);
+
+  const handleToggle = useCallback(
+    (id: string) => {
+      const habit = habits.find((h) => h.id === id);
+      if (!habit) return;
+
+      if (!habit.completed) {
+        addPoints(100);
+      }
+      toggleHabit(id);
+    },
+    [habits, toggleHabit, addPoints]
+  );
 
   return (
     <div className="min-h-screen bg-[var(--bg)] p-6">
@@ -23,7 +44,7 @@ function App() {
           <h2 className="text-xl font-semibold text-[var(--text-h)] mb-4">
             今日の習慣
           </h2>
-          <HabitList habits={habits} onToggle={toggleHabit} onDelete={deleteHabit} />
+          <HabitList habits={habits} onToggle={handleToggle} onDelete={deleteHabit} />
         </section>
 
         <section className="mb-8">

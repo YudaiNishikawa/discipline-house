@@ -41,5 +41,17 @@ export function useHabit(): HabitState {
     );
   }, []);
 
-  return { habits, toggleHabit, addHabit, deleteHabit, resetDaily };
+  const setCompletedCount = useCallback((count: number) => {
+    const newCompleted = count % habits.length;
+
+    setHabits((prev) =>
+      prev.map((habit, index) => ({
+        ...habit,
+        completed: index < newCompleted,
+        completedAt: index < newCompleted ? new Date() : undefined,
+      }))
+    );
+  }, [habits.length]);
+
+  return { habits, toggleHabit, addHabit, deleteHabit, resetDaily, setCompletedCount };
 }
