@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { calculateLevel, calculateProgress, calculateTotalPoints } from '../utils/levelCalculator';
+import { calculateLevel, calculateProgress } from '../utils/levelCalculator';
 import type { LevelInfo } from '../constants/levelConfig';
 
 export interface AssetState {
@@ -10,8 +10,8 @@ export interface AssetState {
   formatPoints: (points: number) => string;
 }
 
-export function useAsset(completedCount: number): AssetState {
-  const totalPoints = useMemo(() => calculateTotalPoints(completedCount), [completedCount]);
+export function useAsset(totalPoints: number): AssetState {
+  const completedCount = Math.floor(totalPoints / 100);
 
   const levelInfo = useMemo(() => calculateLevel(totalPoints), [totalPoints]);
 
