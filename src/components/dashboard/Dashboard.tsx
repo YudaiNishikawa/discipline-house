@@ -1,4 +1,5 @@
 import type { LevelInfo } from '../../constants/levelConfig';
+import { RoomContainer } from '../room/RoomContainer';
 
 interface DashboardProps {
   totalPoints: number;
@@ -9,7 +10,8 @@ interface DashboardProps {
 
 export function Dashboard({ totalPoints, levelInfo, progress, formatPoints }: DashboardProps) {
   return (
-    <div className="rounded-2xl p-6 bg-[var(--social-bg)] border-2 border-[var(--accent-border)] shadow-lg mb-8">
+    <div className="space-y-6">
+      <div className="rounded-2xl p-6 bg-[var(--social-bg)] border-2 border-[var(--accent-border)] shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--text-h)]">
@@ -48,6 +50,9 @@ export function Dashboard({ totalPoints, levelInfo, progress, formatPoints }: Da
           次のレベルまで: {formatPoints(levelInfo.nextThreshold - totalPoints)} pt
         </div>
       )}
+      </div>
+
+      <RoomContainer level={levelInfo.level} totalPoints={totalPoints} />
     </div>
   );
 }
