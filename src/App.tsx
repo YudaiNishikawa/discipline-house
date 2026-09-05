@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { HabitList } from './components/habit/HabitList';
 import { AddHabitForm } from './components/habit/AddHabitForm';
 import { Dashboard } from './components/dashboard/Dashboard';
@@ -7,15 +7,11 @@ import { useStorage } from './hooks/useStorage';
 import { useAsset } from './hooks/useAsset';
 
 function App() {
-  const { habits, toggleHabit, addHabit, deleteHabit, setCompletedCount } = useHabit();
-  const { totalPoints, addPoints } = useStorage();
+  const { habits, toggleHabit, addHabit, deleteHabit } = useHabit();
+  const { totalPoints, addPoints, subtractPoints } = useStorage();
 
   const completedCount = habits.filter((h) => h.completed).length;
   const { levelInfo, progress, formatPoints } = useAsset(totalPoints);
-
-  useEffect(() => {
-    setCompletedCount(Math.floor(totalPoints / 100));
-  }, [totalPoints, setCompletedCount]);
 
   const handleToggle = useCallback(
     (id: string) => {
@@ -24,10 +20,12 @@ function App() {
 
       if (!habit.completed) {
         addPoints(100);
+      } else {
+        subtractPoints(100);
       }
       toggleHabit(id);
     },
-    [habits, toggleHabit, addPoints]
+    [habits, toggleHabit, addPoints, subtractPoints]
   );
 
   return (

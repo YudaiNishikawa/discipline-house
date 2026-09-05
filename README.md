@@ -138,7 +138,7 @@ discipline-house/
 - [x] `feature/habit-management`: TypeScript型定義 ＆ 習慣カードUI実装
 - [x] `feature/asset-level-calc`: 資産・レベル計算ロジックの実装
 - [x] `feature/level-background-ui`: あつ森風動的部屋ビジュアルの実装
-- [ ] `feature/pixela-integration`: Pixela API連携モジュールの実装
+- [x] `feature/pixela-integration`: Pixela API連携モジュールの実装
 
 ### Phase 3: UX強化 & 仕上げ（Day 3）
 - [ ] `feature/completion-effects`: 達成時エフェクトの組み込み

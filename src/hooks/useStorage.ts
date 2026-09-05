@@ -4,6 +4,7 @@ import { getStoredPoints, setStoredPoints } from '../services/storage';
 interface UseStorageReturn {
   totalPoints: number;
   addPoints: (points: number) => void;
+  subtractPoints: (points: number) => void;
 }
 
 export function useStorage(): UseStorageReturn {
@@ -17,5 +18,13 @@ export function useStorage(): UseStorageReturn {
     });
   }, []);
 
-  return { totalPoints, addPoints };
+  const subtractPoints = useCallback((points: number) => {
+    setTotalPoints((prev) => {
+      const newTotal = Math.max(0, prev - points);
+      setStoredPoints(newTotal);
+      return newTotal;
+    });
+  }, []);
+
+  return { totalPoints, addPoints, subtractPoints };
 }

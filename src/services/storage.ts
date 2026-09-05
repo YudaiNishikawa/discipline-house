@@ -15,3 +15,10 @@ export function addPoints(points: number): number {
   setStoredPoints(newTotal);
   return newTotal;
 }
+
+export function subtractPoints(points: number): number {
+  const current = getStoredPoints();
+  const newTotal = Math.max(0, current - points);
+  setStoredPoints(newTotal);
+  return newTotal;
+}
