@@ -13,6 +13,13 @@ function App() {
   const completedCount = habits.filter((h) => h.completed).length;
   const { levelInfo, progress, formatPoints } = useAsset(totalPoints);
 
+  const isToday = (date: Date): boolean => {
+    const today = new Date();
+    return date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate();
+  };
+
   const handleToggle = useCallback(
     (id: string) => {
       const habit = habits.find((h) => h.id === id);
@@ -20,7 +27,7 @@ function App() {
 
       if (!habit.completed) {
         addPoints(100);
-      } else {
+      } else if (habit.completedAt && isToday(habit.completedAt)) {
         subtractPoints(100);
       }
       toggleHabit(id);
